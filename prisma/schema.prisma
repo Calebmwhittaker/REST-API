@@ -1,0 +1,37 @@
+datasource db {
+    provider = "postgres"
+    url      = "postgresql://directus:directus@localhost:5432/rest?schema=public"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    firstName String
+    lastName  String
+    userName  String   @unique
+    age       Int
+    email     String   @unique
+    addressId String?
+    password  String
+
+    address Address? @relation(fields: [addressId], references: [id])
+}
+
+model Address {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    street1   String
+    street2   String?
+    city      String
+    state     String
+    zipCode   String
+    country   String
+
+    User User[]
+}
